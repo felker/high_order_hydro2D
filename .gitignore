@@ -1,0 +1,5 @@
+athena_harvest/
+*.DS_Store
+*~
+*.o
+*.vtk
