@@ -39,6 +39,9 @@
 #include <omp.h>
 #endif
 
+//kyle added for debugging                                                                                                                        
+#include <iomanip>
+
 //--------------------------------------------------------------------------------------
 //! \fn  void HydroIntegrator::CalculateFluxes
 //  \brief Calculate Hydrodynamic Fluxes using the Riemann solver
@@ -106,10 +109,39 @@ void HydroIntegrator::CalculateFluxes(MeshBlock *pmb,AthenaArray<Real> &u,
 
       // reconstruct L/R states
       if (step == 1) {
-        DonorCellX1(k,j,is,ie+1,w,bcc,wl,wr);
+	PiecewiseLinearX1(k,j,is,ie+1,w,bcc,wl,wr);
+	//DonorCellX1(k,j,is,ie+1,w,bcc,wl,wr);
       } else {
-        PiecewiseLinearX1(k,j,is,ie+1,w,bcc,wl,wr);
+	PiecewiseParabolicX1(k,j,is,ie+1,w,bcc,wl,wr);
+	//PiecewiseLinearX1(k,j,is,ie+1,w,bcc,wl,wr);
       }
+      //for debugging internal PPM
+      /*      if (j==25 && step == 2)
+	      exit(1);  */
+
+      //Debug overall PPM: Print out all reconstructed states (easiest to do for one j slice, since only 1D wl/wr stored at a time)
+      /*      if (j==25 && step == 2){
+	std::cout << std::setprecision(15);
+	for (int i=is-1; i<=ie+1; ++i){
+	  //for reading output
+	  //std::cout << "(k,j,i)=" << k << "," << j << "," << i << " (wl,wr) =" ;
+	  for (int n=0; n<NHYDRO; ++n){
+	    //for analyzing CSV data
+	    //traditional: just L/R riemann states
+	    //	    std::cout << wl(n,i) << "," <<  wr(n,i) << ",";
+
+	    //for piecewise complete parabolic profile: L/R states and cell average
+	    std::cout << w(n,k,j,i) << ", " << wl(n,i) << "," <<  wr(n,i) << ",";
+	    //for reading output
+	    //std::cout << wl(n,i) << " , " <<  wr(n,i) << " | "; 
+	  }
+	  std::cout << "\n";
+	  } 
+	//for only the first timestep
+	exit(1); 
+	//for additional timesteps
+	//std::cout << "\n\n";
+	}  */
 
       // compute fluxes
       RiemannSolver(k,j,is,ie+1,IVX,b1,wl,wr,flx);
@@ -137,7 +169,7 @@ void HydroIntegrator::CalculateFluxes(MeshBlock *pmb,AthenaArray<Real> &u,
         }
       }
     }
-  }
+  }  
 
 //--------------------------------------------------------------------------------------
 // j-direction
@@ -157,9 +189,11 @@ void HydroIntegrator::CalculateFluxes(MeshBlock *pmb,AthenaArray<Real> &u,
 
         // reconstruct L/R states at j
         if (step == 1) {
-          DonorCellX2(k,j,il,iu,w,bcc,wl,wr);
+	  PiecewiseLinearX2(k,j,il,iu,w,bcc,wl,wr);
+	  //DonorCellX2(k,j,il,iu,w,bcc,wl,wr);
         } else {
-          PiecewiseLinearX2(k,j,il,iu,w,bcc,wl,wr);
+	  PiecewiseParabolicX2(k,j,il,iu,w,bcc,wl,wr);
+	  //PiecewiseLinearX2(k,j,il,iu,w,bcc,wl,wr);
         }
 
         // compute fluxes at j
@@ -205,9 +239,11 @@ void HydroIntegrator::CalculateFluxes(MeshBlock *pmb,AthenaArray<Real> &u,
 
         // reconstruct L/R states at k
         if (step == 1) {
-          DonorCellX3(k,j,il,iu,w,bcc,wl,wr);
-        } else {
+	  //          DonorCellX3(k,j,il,iu,w,bcc,wl,wr);
           PiecewiseLinearX3(k,j,il,iu,w,bcc,wl,wr);
+        } else {
+	  PiecewiseParabolicX3(k,j,il,iu,w,bcc,wl,wr);
+	  //PiecewiseLinearX3(k,j,il,iu,w,bcc,wl,wr);
         }
 
         // compute fluxes at k

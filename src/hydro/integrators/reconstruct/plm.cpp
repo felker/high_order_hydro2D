@@ -100,6 +100,7 @@ void HydroIntegrator::PiecewiseLinearX1(const int k, const int j,
           Real dxfl=pco->x1v(i)-pco->x1f(i);
           Real cf=dx_i/(pco->x1f(i+1)-pco->x1v(i));
           Real cb=dx_im1/dxfl;
+	  //fix this so that it is 
           qr(n,i) -= dxfl*dq2*(cf*dqc+cb*dqr)/(dqc*dqc+(cf+cb-2.0)*dq2+dqr*dqr);
         }
       }
@@ -122,6 +123,7 @@ void HydroIntegrator::PiecewiseLinearX1(const int k, const int j,
           Real dxfr=pco->x1f(i)-pco->x1v(i-1);
           Real cf=dx_im1/dxfr;
           Real cb=dx_im2/(pco->x1v(i-1)-pco->x1f(i-1));
+	  //	  std::cout << "(cf, cb) = " << cf << cb << "\n"; 
           ql(n,i) += dxfr*dq2*(cf*dql+cb*dqc)/(dql*dql+(cf+cb-2.0)*dq2+dqc*dqc);
         }
 

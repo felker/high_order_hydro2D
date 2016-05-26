@@ -37,6 +37,21 @@ public:
     const int ivx, const AthenaArray<Real> &bx, AthenaArray<Real> &wl,
     AthenaArray<Real> &wr, AthenaArray<Real> &flx);
 
+  void PiecewiseParabolicX1(const int k, const int j,
+    const int il, const int iu,
+    const AthenaArray<Real> &q, const AthenaArray<Real> &bcc,
+    AthenaArray<Real> &ql, AthenaArray<Real> &qr);
+
+  void PiecewiseParabolicX2(const int k, const int j,
+    const int il, const int iu,
+    const AthenaArray<Real> &q, const AthenaArray<Real> &bcc,
+    AthenaArray<Real> &ql, AthenaArray<Real> &qr);
+
+  void PiecewiseParabolicX3(const int k, const int j,
+    const int il, const int iu,
+    const AthenaArray<Real> &q, const AthenaArray<Real> &bcc,
+    AthenaArray<Real> &ql, AthenaArray<Real> &qr);
+
   void PiecewiseLinearX1(const int k, const int j,
     const int il, const int iu,
     const AthenaArray<Real> &q, const AthenaArray<Real> &bcc,
